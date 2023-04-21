@@ -1,18 +1,30 @@
 function fetchUser() {
   showSpinner();
-  fetch("https://randomuser.me/api")
-    .then((response) => response.json())
+  fetch('https://randomuser.me/api')
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Request Failed');
+      }
+      return response.json();
+    })
+
     .then((data) => {
       hideSpinner();
       displayUser(data.results[0]);
+    })
+    .catch((error) => {
+      showSpinner();
+      document.querySelector(
+        '#user'
+      ).innerHTML = `<p class="text-xl text-center text-red-500 mb-5">${error}</p>`;
     });
 }
 function displayUser(user) {
-  const userDisplay = document.querySelector("#user");
-  if (user.gender === "female") {
-    document.body.style.backgroundColor = "rebeccapurple";
+  const userDisplay = document.querySelector('#user');
+  if (user.gender === 'female') {
+    document.body.style.backgroundColor = 'rebeccapurple';
   } else {
-    document.body.style.backgroundColor = "steelblue";
+    document.body.style.backgroundColor = 'steelblue';
   }
   userDisplay.innerHTML = `<div class="flex justify-between">
   <div class="flex">
@@ -40,10 +52,10 @@ function displayUser(user) {
 </div>`;
 }
 function showSpinner() {
-  document.querySelector(".spinner").style.display = "block";
+  document.querySelector('.spinner').style.display = 'block';
 }
 function hideSpinner() {
-  document.querySelector(".spinner").style.display = "none";
+  document.querySelector('.spinner').style.display = 'none';
 }
-document.querySelector("#generate").addEventListener("click", fetchUser);
+document.querySelector('#generate').addEventListener('click', fetchUser);
 fetchUser();
